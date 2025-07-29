@@ -2,8 +2,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .models import User, Clinica, Paciente, Agendamento, Atendimento, PastaDocumento, DocumentoArquivo
-from .forms import UserForm, ClinicaForm, PacienteForm, AgendamentoForm, AtendimentoForm, PastaDocumentoForm, DocumentoArquivoForm
+from django.contrib.auth.decorators import login_required, permission_required
+from django.views.decorators.csrf import csrf_exempt
+from .models import User, Clinica, Paciente, Agendamento, Atendimento, PastaDocumento, DocumentoArquivo, Prontuario
+from .forms import UserForm, ClinicaForm, PacienteForm, AgendamentoForm, AtendimentoForm, PastaDocumentoForm, DocumentoArquivoForm, ProntuarioForm
 from .permissions import check_perfil
 from django.contrib import messages
 from django.db import models
@@ -107,9 +109,12 @@ def agendamento_list(request):
     agendamentos = Agendamento.objects.all()           # Obtém todos os agendamentos
     return render(request, 'agendamento_list.html', {'agendamentos': agendamentos}) # Renderiza
 
+
 # View para criar agendamentos
+@csrf_exempt
 @login_required
 @check_perfil(['ATENDENTE', 'PROFESSOR', 'COORDENADOR'])
+
 def agendamento_create(request):
     if request.method == 'POST':
         form = AgendamentoForm(request.POST)           # Cria formulário com dados do POST
@@ -128,8 +133,10 @@ def atendimento_list(request):
     return render(request, 'atendimento_list.html', {'atendimentos': atendimentos}) # Renderiza
 
 # View para criar atendimentos
+@csrf_exempt
 @login_required
-@check_perfil(['PROFESSOR', 'ALUNO'])
+@permission_required('clinica.add_atendimento', raise_exception=True)
+@check_perfil(['PROFESSOR', 'ALUNO', 'COORDENADOR'])
 def atendimento_create(request):
     if request.method == 'POST':
         form = AtendimentoForm(request.POST)           # Cria formulário com dados do POST
@@ -169,3 +176,31 @@ def documento_create(request):
     else:
         form = DocumentoArquivoForm()                  # Cria formulário vazio
     return render(request, 'documento_form.html', {'form': form}) # Renderiza
+
+@login_required
+@permission_required('clinica.view_prontuario', raise_exception=True)
+def prontuario_list(request):
+    prontuarios = Prontuario.objects.all()
+    if request.user.perfil == 'PROFESSOR':
+        prontuarios = prontuarios.filter(professor=request.user)
+    elif request.user.perfil == 'COORDENADOR':
+        prontuarios = prontuarios  # Coordenadores veem todos os prontuários
+    return render(request, 'prontuarios/prontuario_list.html', {'prontuarios': prontuarios})
+
+@login_required
+@permission_required('clinica.add_prontuario', raise_exception=True)
+def prontuario_create(request):
+    if request.method == 'POST':
+        form = ProntuarioForm(request.POST, request.FILES)
+        if form.is_valid():
+            prontuario = form.save(commit=False)
+            if request.user.perfil == 'PROFESSOR':
+                prontuario.professor = request.user
+            elif request.user.perfil == 'COORDENADOR':
+                prontuario.coordenador = request.user
+            prontuario.save()
+            logger.info(f"Prontuário criado por {request.user.username} para paciente {prontuario.paciente}.")
+            return redirect('clinica:prontuario_list')
+    else:
+        form = ProntuarioForm()
+    return render(request, 'prontuarios/prontuario_form.html', {'form': form})

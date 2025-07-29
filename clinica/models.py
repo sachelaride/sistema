@@ -1,10 +1,79 @@
 # Importa módulos do Django para modelos
 from django.db import models
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
 # Importa hashlib para cálculo de hash SHA-256
 import hashlib
 import os
+from datetime import datetime
+
+#Modelo de Prontuario
+#from django.db import models
+#from django.conf import settings
+#import hashlib
+#import os
+#from datetime import datetime
+
+#class Prontuario(models.Model):
+#    paciente = models.ForeignKey('Paciente', on_delete=models.CASCADE, related_name='prontuarios')
+#    atendimento = models.ForeignKey('Atendimento', on_delete=models.CASCADE, related_name='prontuarios')
+#    professor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, limit_choices_to={'perfil': 'PROFESSOR'})
+#    coordenador = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, limit_choices_to={'perfil': 'COORDENADOR'}, related_name='prontuarios_coordenador')
+#    data_criacao = models.DateTimeField(auto_now_add=True)
+#    observacoes = models.TextField(blank=True)
+#    arquivo = models.FileField(upload_to='uploads/prontuarios/%Y/%m/%d/', null=True, blank=True)
+#    hash_arquivo = models.CharField(max_length=64, blank=True)
+#
+#    def save(self, *args, **kwargs):
+#        if self.arquivo:
+#            # Calcular hash SHA-256 para evitar duplicatas
+#            sha256_hash = hashlib.sha256()
+#            for chunk in self.arquivo.chunks():
+#                sha256_hash.update(chunk)
+#            self.hash_arquivo = sha256_hash.hexdigest()
+#        super().save(*args, **kwargs)
+#
+#    class Meta:
+#        permissions = [
+#            ('view_prontuario', 'Can view prontuario'),
+#            ('add_prontuario', 'Can add prontuario'),
+#            ('change_prontuario', 'Can change prontuario'),
+#        ]
+#
+#    def __str__(self):
+#        return f"Prontuário de {self.paciente} - {self.data_criacao}"
+
+
+class Prontuario(models.Model):
+    paciente = models.ForeignKey('Paciente', on_delete=models.CASCADE, related_name='prontuarios')
+    atendimento = models.ForeignKey('Atendimento', on_delete=models.CASCADE, related_name='prontuarios')
+    professor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, limit_choices_to={'perfil': 'PROFESSOR'})
+    coordenador = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, limit_choices_to={'perfil': 'COORDENADOR'}, related_name='prontuarios_coordenador')
+    data_criacao = models.DateTimeField(auto_now_add=True)
+    observacoes = models.TextField(blank=True)
+    arquivo = models.FileField(upload_to='uploads/prontuarios/%Y/%m/%d/', null=True, blank=True)
+    hash_arquivo = models.CharField(max_length=64, blank=True)
+
+    def save(self, *args, **kwargs):
+        if self.arquivo:
+            sha256_hash = hashlib.sha256()
+            for chunk in self.arquivo.chunks():
+                sha256_hash.update(chunk)
+            self.hash_arquivo = sha256_hash.hexdigest()
+        super().save(*args, **kwargs)
+
+    class Meta:
+        # Removidas permissões redundantes
+        verbose_name = 'Prontuário'
+        verbose_name_plural = 'Prontuários'
+
+    def __str__(self):
+        return f"Prontuário de {self.paciente} - {self.data_criacao}"
+
+
+
+
 
 # Modelo de usuário personalizado
 class User(AbstractUser):

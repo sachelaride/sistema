@@ -19,4 +19,6 @@ urlpatterns = [
     path('atendimentos/new/', views.atendimento_create, name='atendimento_create'),
     path('documentos/', views.documento_list, name='documento_list'),
     path('documentos/new/', views.documento_create, name='documento_create'),
+    path('prontuarios/', views.prontuario_list, name='prontuario_list'),
+    path('prontuarios/new/', views.prontuario_create, name='prontuario_create'),
 ]

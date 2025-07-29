@@ -1,7 +1,17 @@
 # Importa o módulo de formulários do Django
 from django import forms
 # Importa os modelos do aplicativo clinica
-from .models import User, Clinica, Paciente, Agendamento, Atendimento, PastaDocumento, DocumentoArquivo
+from .models import User, Clinica, Paciente, Agendamento, Atendimento, PastaDocumento, DocumentoArquivo, Prontuario
+
+
+#Formulario para Pronturario
+class ProntuarioForm(forms.ModelForm):
+    class Meta:
+        model = Prontuario
+        fields = ['paciente', 'atendimento', 'professor', 'coordenador', 'observacoes', 'arquivo']
+        widgets = {
+            'observacoes': forms.Textarea(attrs={'rows': 5}),
+        }
 
 # Formulário para criação de usuários
 class UserForm(forms.ModelForm):

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista de Prontuários</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>Prontuários</h1>
+        <a href="{% url 'clinica:prontuario_create' %}" class="btn btn-primary">Novo Prontuário</a>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Paciente</th>
+                    <th>Atendimento</th>
+                    <th>Professor</th>
+                    <th>Coordenador</th>
+                    <th>Data</th>
+                    <th>Observações</th>
+                    <th>Arquivo</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for prontuario in prontuarios %}
+                    <tr>
+                        <td>{{ prontuario.paciente }}</td>
+                        <td>{{ prontuario.atendimento }}</td>
+                        <td>{{ prontuario.professor }}</td>
+                        <td>{{ prontuario.coordenador }}</td>
+                        <td>{{ prontuario.data_criacao }}</td>
+                        <td>{{ prontuario.observacoes }}</td>
+                        <td>
+                            {% if prontuario.arquivo %}
+                                <a href="{{ prontuario.arquivo.url }}">Download</a>
+                            {% else %}
+                                Sem arquivo
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="7">Nenhum prontuário encontrado.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

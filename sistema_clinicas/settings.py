@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'clinica.apps.ClinicaConfig',
+#    'clinica',
 ]
 
 # Middleware
@@ -63,8 +64,10 @@ TEMPLATES = [
 
 # Arquivos Estáticos
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = BASE_DIR / 'static'
+STATICFILES_DIR = [ 
+        BASE_DIR / 'static',
+]
 
 # Banco de Dados
 DATABASES = {
