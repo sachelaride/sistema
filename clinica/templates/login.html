@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+<!-- Estende o template base -->
+
+{% block content %}
+    <!-- Título da página -->
+    <h2>Login</h2>
+    <!-- Formulário de login -->
+    <form method="post">
+        {% csrf_token %} <!-- Token CSRF para segurança -->
+        <!-- Campo para RGM/CPF -->
+        <div class="mb-3">
+            <label for="username" class="form-label">RGM/CPF</label>
+            <input type="text" class="form-control" id="username" name="username" required>
+        </div>
+        <!-- Campo para senha -->
+        <div class="mb-3">
+            <label for="password" class="form-label">Senha</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+        <!-- Botão de submissão -->
+        <button type="submit" class="btn btn-primary">Entrar</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+<!-- Estende o template base -->
+
+{% block content %}
+    <!-- Título da página -->
+    <h2>Lista de Usuários</h2>
+    <!-- Botão para criar novo usuário -->
+    <a href="{% url 'clinica:user_create' %}" class="btn btn-success mb-3">Novo Usuário</a>
+    <!-- Tabela de usuários -->
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>RGM</th>
+                <th>Perfil</th>
+                <th>Clínica</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <!-- Linha para cada usuário -->
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.rgm }}</td>
+                    <td>{{ user.get_perfil_display }}</td>
+                    <td>{{ user.clinica.nome|default:"N/A" }}</td>
+                </tr>
+            {% empty %}
+                <!-- Mensagem se não houver usuários -->
+                <tr>
+                    <td colspan="4">Nenhum usuário cadastrado.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

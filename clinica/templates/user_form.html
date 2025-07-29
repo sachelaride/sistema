@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+<!-- Estende o template base -->
+
+{% block content %}
+    <!-- Título da página -->
+    <h2>Novo Usuário</h2>
+    <!-- Formulário para criar usuário -->
+    <form method="post">
+        {% csrf_token %} <!-- Token CSRF -->
+        {{ form.as_p }} <!-- Renderiza o formulário -->
+        <!-- Botões de ação -->
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a href="{% url 'clinica:user_list' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+{% endblock %}

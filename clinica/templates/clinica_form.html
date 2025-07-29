@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+<!-- Estende o template base -->
+
+{% block content %}
+    <!-- Título da página -->
+    <h2>Lista de Clínicas</h2>
+    <!-- Botão para criar nova clínica -->
+    <a href="{% url 'clinica:clinica_create' %}" class="btn btn-success mb-3">Nova Clínica</a>
+    <!-- Tabela de clínicas -->
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Endereço</th>
+                <th>Telefone</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for clinica in clinicas %}
+                <!-- Linha para cada clínica -->
+                <tr>
+                    <td>{{ clinica.nome }}</td>
+                    <td>{{ clinica.endereco }}</td>
+                    <td>{{ clinica.telefone }}</td>
+                </tr>
+            {% empty %}
+                <!-- Mensagem se não houver clínicas -->
+                <tr>
+                    <td colspan="3">Nenhuma clínica cadastrada.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

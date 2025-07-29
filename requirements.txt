@@ -1,0 +1,4 @@
+# Dependência do Django
+django==4.2.7
+# Driver para PostgreSQL
+psycopg2-binary==2.9.9

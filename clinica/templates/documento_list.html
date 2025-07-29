@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+<!-- Estende o template base -->
+
+{% block content %}
+    <!-- Título da página -->
+    <h2>Lista de Documentos</h2>
+    <!-- Botão para criar novo documento -->
+    <a href="{% url 'clinica:documento_create' %}" class="btn btn-success mb-3">Novo Documento</a>
+    <!-- Tabela de documentos -->
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Pasta</th>
+                <th>Paciente</th>
+                <th>Arquivo</th>
+                <th>Data de Upload</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for documento in documentos %}
+                <!-- Linha para cada documento -->
+                <tr>
+                    <td>{{ documento.pasta.nome }}</td>
+                    <td>{{ documento.paciente.nome|default:"N/A" }}</td>
+                    <td><a href="{{ documento.arquivo.url }}">{{ documento.arquivo.name }}</a></td>
+                    <td>{{ documento.uploaded_at }}</td>
+                </tr>
+            {% empty %}
+                <!-- Mensagem se não houver documentos -->
+                <tr>
+                    <td colspan="4">Nenhum documento cadastrado.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

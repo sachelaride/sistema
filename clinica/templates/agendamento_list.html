@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+<!-- Estende o template base -->
+
+{% block content %}
+    <!-- Título da página -->
+    <h2>Lista de Agendamentos</h2>
+    <!-- Botão para criar novo agendamento -->
+    <a href="{% url 'clinica:agendamento_create' %}" class="btn btn-success mb-3">Novo Agendamento</a>
+    <!-- Tabela de agendamentos -->
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Paciente</th>
+                <th>Médico</th>
+                <th>Aluno</th>
+                <th>Data</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for agendamento in agendamentos %}
+                <!-- Linha para cada agendamento -->
+                <tr>
+                    <td>{{ agendamento.paciente.nome }}</td>
+                    <td>{{ agendamento.medico.username }}</td>
+                    <td>{{ agendamento.aluno.username|default:"N/A" }}</td>
+                    <td>{{ agendamento.data }}</td>
+                    <td>{{ agendamento.get_status_display }}</td>
+                </tr>
+            {% empty %}
+                <!-- Mensagem se não houver agendamentos -->
+                <tr>
+                    <td colspan="5">Nenhum agendamento cadastrado.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

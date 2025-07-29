@@ -1,0 +1,12 @@
+/* Define a cor de fundo do corpo */
+body {
+    background-color: #f8f9fa;
+}
+/* Estiliza a marca da navbar */
+.navbar-brand {
+    font-weight: bold;
+}
+/* Define o fundo branco para tabelas */
+.table {
+    background-color: white;
+}

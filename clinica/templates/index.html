@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+<!-- Estende o template base -->
+
+{% block content %}
+    <!-- Título da página -->
+    <h2>Bem-vindo ao Sistema de Clínicas</h2>
+    <!-- Mensagem de boas-vindas -->
+    <p>Este é o sistema de gerenciamento de clínicas. Use o menu acima para navegar.</p>
+    {% if user.is_authenticated %}
+        <!-- Exibe informações do usuário logado -->
+        <p>Logado como: {{ user.username }} ({{ user.get_perfil_display }})</p>
+        {% if user.clinica %}
+            <p>Clínica: {{ user.clinica.nome }}</p>
+        {% else %}
+            <p>Clínica: Não associada</p>
+        {% endif %}
+    {% else %}
+        <!-- Mensagem para usuários não autenticados -->
+        <p>Faça login para acessar o sistema.</p>
+        <a href="{% url 'clinica:login' %}" class="btn btn-primary">Login</a>
+    {% endif %}
+{% endblock %}
